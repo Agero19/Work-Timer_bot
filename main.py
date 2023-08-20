@@ -59,6 +59,7 @@ async def finish_working(message: types.Message):
             work_records[chat_id][-1]['end_time'], "%H:%M-%d/%m/%Y")
         total_work_time = end_time - start_time
         work_records[chat_id][-1]['total_work_time'] = str(total_work_time)
+        save_work_records()
         await message.reply(f"You finished your work at {current_time}. "
                             f"Total time of work: {total_work_time}.")
     else:
@@ -77,6 +78,12 @@ async def get_records(message: types.Message):
         await message.reply(record_text, parse_mode=ParseMode.MARKDOWN)
     else:
         await message.reply("No work records available.")
+
+
+def save_work_records():
+    with open('work_records.json', 'w') as f:
+        json.dump(work_records, f, indent=4)
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
